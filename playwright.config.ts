@@ -6,6 +6,7 @@ export default defineConfig({
   timeout: 1 * 60 * 1000,
   retries: process.env.CI ? 2 : 1,
   workers: 2,
+  testDir: "./tests",
   reporter: [
     ["line"],
     [

@@ -4,6 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test:prod": "cross-env TEST_URL=prod npx playwright test --ui",
+    "test:dispatcher": "cross-env CI=dispatcher npx playwright test --ui",
+    "test:eu": "cross-env CI=eu npx playwright test --ui",
+    "test:universal": "cross-env CI=universal npx playwright test --ui",
+    "test:medlog": "cross-env CI=medlog npx playwright test --ui",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +28,8 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.53.2",
-    "@types/node": "^24.0.11"
+    "@types/node": "^24.0.11",
+    "allure-playwright": "^3.3.0",
+    "cross-env": "^7.0.3"
   }
 }
