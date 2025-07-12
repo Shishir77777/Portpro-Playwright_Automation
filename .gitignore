@@ -1,4 +1,6 @@
 node_modules
-reports
-allure-report
-allure-results
+reports/
+allure-report/
+allure-results/
+test-results/
+storage/

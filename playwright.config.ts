@@ -18,6 +18,7 @@ export default defineConfig({
           os_version: os.version(),
           node_version: process.version,
         },
+        outputDir: "allure-report",
       },
     ],
   ],

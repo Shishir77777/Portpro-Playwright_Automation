@@ -1,6 +1,5 @@
 import { Locator, Page } from "playwright";
 import { LISTING_ROUTES, USER_CREDENTIALS } from "../config/config";
-import { text } from "stream/consumers";
 import { expect } from "playwright/test";
 import { BasePage } from "./base";
 
@@ -18,6 +17,10 @@ export class LoginHelper extends BasePage {
     this._passwordLocator = page.getByRole("textbox", { name: "password" });
     this._signInButtonLocator = page.getByRole("button", { name: "Sign In" });
     this._spinnerLocator = page.getByRole("status");
+  }
+
+  public async isSignInHeadingVisible() {
+    return await this._signInHeading.isVisible();
   }
 
   private async _getSignInHeadingText() {
@@ -41,7 +44,7 @@ export class LoginHelper extends BasePage {
     await this._page.waitForLoadState("networkidle");
     await expect(this._spinnerLocator).not.toBeVisible();
 
-    await this._page.waitForURL(LISTING_ROUTES.ONBOARDING);
+    await this._page.waitForURL(LISTING_ROUTES.TMS_DISPATCHER);
   }
 
   public async skipOnboarding() {

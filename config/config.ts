@@ -19,19 +19,12 @@ const handleTestUrl = (type: PATH_URL) => {
     case "medlog":
       return BASE_URL_MEDLOG;
     default:
-      throw new Error(`Invalid path URL: ${type}`);
+      return BASE_URL_PROD;
   }
 };
 
 const handleUserCredentials = (type: PATH_URL) => {
   switch (type) {
-    case "prod":
-    case "dispatcher":
-      return {
-        username: "shishir+pt7@portpro.io",
-        password: "TestTEST@12345",
-      };
-
     case "eu":
       return {
         username: "swostika@portpro.io",
@@ -48,13 +41,18 @@ const handleUserCredentials = (type: PATH_URL) => {
         password: "Portpro@123",
       };
     default:
-      throw new Error(`Invalid path URL: ${type}`);
+      return {
+        username: "shishir+pt7@portpro.io",
+        password: "TestTEST@12345",
+      };
   }
 };
 
-export const TEST_URL = handleTestUrl(process.env.TEST_URL as PATH_URL);
+export const TEST_URL = handleTestUrl(
+  (process.env.TEST_URL as PATH_URL) || "prod"
+);
 export const USER_CREDENTIALS = handleUserCredentials(
-  process.env.TEST_URL as PATH_URL
+  (process.env.TEST_URL as PATH_URL) || "prod"
 );
 
 export const LISTING_ROUTES = {

@@ -13,7 +13,12 @@ export const TEST = test.extend<{ login: void }>({
       const loginHelper = new LoginHelper(page);
 
       await loginHelper.navigateToLoginPage();
+
+      // const isHeadingVisible = await loginHelper.isSignInHeadingVisible();
+
+      // if (!isHeadingVisible)
       await loginHelper.signIn();
+
       await loginHelper.skipOnboarding();
 
       await page.context().storageState({ path: storagePath });
