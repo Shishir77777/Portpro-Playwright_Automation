@@ -39,6 +39,7 @@ export class AddLoad extends BasePage {
   public async addNewLoad() {
     await this._addLoadButtonLocator.click();
     await this.waitForModalToOpen();
+    await this.checkModalTitle();
   }
 
   private async waitForModalToOpen() {
