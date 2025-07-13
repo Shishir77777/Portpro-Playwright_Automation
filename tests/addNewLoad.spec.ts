@@ -28,4 +28,11 @@ TEST.describe("Add New Load", async () => {
     await addLoad.openCellLoad();
     await addLoad.duplicateLoad();
   });
+
+  TEST("Delete Load", async ({ page }) => {
+    const addLoad = new AddLoad(page);
+
+    await addLoad.openCellLoad();
+    await addLoad.deleteLoad();
+  });
 });

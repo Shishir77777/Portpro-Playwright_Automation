@@ -227,7 +227,10 @@ export class AddLoad extends BasePage {
 
   private async getLoadCell() {
     const row = await this.getListingRow();
-    const cell = row.locator("div[role='gridcell']").nth(6);
+    const cell = row
+      .locator("div[role='gridcell']")
+      .nth(6)
+      .locator("span.cell-content span.text-primary");
     await expect(cell).toBeVisible();
     return cell;
   }
@@ -240,9 +243,16 @@ export class AddLoad extends BasePage {
     await this.verifyLoadIsStatus();
   }
 
+  private async getButtonWithIcon(icon: "cloneicon" | "removeicon") {
+    const modal = this._modalContainer;
+    const button = modal.locator(`//button[@data-for='${icon}']`);
+    await expect(button).toBeVisible();
+    return button;
+  }
+
   public async duplicateLoad() {
     const modal = this._modalContainer;
-    const duplicateButton = modal.locator("//button[@data-for='cloneicon']");
+    const duplicateButton = await this.getButtonWithIcon("cloneicon");
     await duplicateButton.click();
 
     const confirmButton = modal.getByRole("button", { name: "Confirm" });
@@ -250,5 +260,16 @@ export class AddLoad extends BasePage {
 
     await this.verifyToastIsVisible();
     await this.verifyToastMessage("added!");
+  }
+
+  public async deleteLoad() {
+    const duplicateButton = await this.getButtonWithIcon("removeicon");
+    await duplicateButton.click();
+
+    const confirmButton = this._page.getByRole("button", { name: "Yes" });
+    await confirmButton.click();
+
+    // await this.verifyToastIsVisible();
+    await this.verifyToastMessage("removed.");
   }
 }
