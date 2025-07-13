@@ -21,4 +21,11 @@ TEST.describe("Add New Load", async () => {
     await addLoad.gotoPayableAndExpenses();
     await addLoad.gotoTracking();
   });
+
+  TEST("Duplicate Load", async ({ page }) => {
+    const addLoad = new AddLoad(page);
+
+    await addLoad.openCellLoad();
+    await addLoad.duplicateLoad();
+  });
 });

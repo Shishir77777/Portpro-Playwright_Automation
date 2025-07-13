@@ -128,8 +128,10 @@ export class AddLoad extends BasePage {
     await this._page.waitForLoadState("networkidle");
   }
 
-  public async verifyToastMessage() {
-    await expect(this._toastLocator).toContainText("load is created!");
+  public async verifyToastMessage(message: string) {
+    await expect(this._toastLocator).toContainText(
+      message ?? "load is created!"
+    );
   }
 
   public async verifyToastIsVisible() {
@@ -215,5 +217,38 @@ export class AddLoad extends BasePage {
 
   public async gotoNotes() {
     await this.toggleLoadTab("Notes");
+  }
+
+  private async getListingRow() {
+    const row = this._page.locator(".rdg-row").first();
+    await expect(row).toBeVisible();
+    return row;
+  }
+
+  private async getLoadCell() {
+    const row = await this.getListingRow();
+    const cell = row.locator("div[role='gridcell']").nth(6);
+    await expect(cell).toBeVisible();
+    return cell;
+  }
+
+  public async openCellLoad() {
+    const cell = await this.getLoadCell();
+    await cell.click();
+
+    await this.waitForModalToOpen();
+    await this.verifyLoadIsStatus();
+  }
+
+  public async duplicateLoad() {
+    const modal = this._modalContainer;
+    const duplicateButton = modal.locator("//button[@data-for='cloneicon']");
+    await duplicateButton.click();
+
+    const confirmButton = modal.getByRole("button", { name: "Confirm" });
+    await confirmButton.click();
+
+    await this.verifyToastIsVisible();
+    await this.verifyToastMessage("added!");
   }
 }
