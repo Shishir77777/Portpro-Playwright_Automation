@@ -19,6 +19,7 @@ export class AddLoad extends BasePage {
   protected _tablistLocator: Locator;
   protected _listBoxLocator: Locator;
   protected _listBoxOptionLocator: Locator;
+  protected _toastLocator: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -37,6 +38,7 @@ export class AddLoad extends BasePage {
     this._tablistLocator = page.getByRole("tablist");
     this._listBoxLocator = page.getByRole("listbox");
     this._listBoxOptionLocator = page.getByRole("option");
+    this._toastLocator = page.locator(".toast-message");
   }
 
   public async openAddNewLoad() {
@@ -108,5 +110,9 @@ export class AddLoad extends BasePage {
     const locateCreate = modal.locator(`//button[text()='Create Load']`);
     await locateCreate.click();
     await this._page.waitForLoadState("networkidle");
+  }
+
+  public async verifyToastMessage() {
+    await expect(this._toastLocator).toContainText("Load Is Created!");
   }
 }

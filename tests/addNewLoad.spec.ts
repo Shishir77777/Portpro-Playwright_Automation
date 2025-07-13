@@ -14,5 +14,6 @@ TEST.describe("Add New Load", async () => {
     await addLoad.selectLoadFieldInfo("Branch");
     await addLoad.selectLoadRoute();
     await addLoad.createLoad();
+    await addLoad.verifyToastMessage();
   });
 });
