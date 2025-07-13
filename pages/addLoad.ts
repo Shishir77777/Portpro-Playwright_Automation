@@ -7,6 +7,19 @@ type LoadSelectFields =
   | "Pick Up Location"
   | "Delivery Location"
   | "Branch";
+
+type LoadModalTabs =
+  | "Load Info"
+  | "Billing"
+  | "Documents"
+  | "Payment"
+  | "Routing"
+  | "Payable & Expenses"
+  | "Tracking"
+  | "Messaging"
+  | "Audit"
+  | "Notes";
+
 export class AddLoad extends BasePage {
   protected _addLoadButtonLocator: Locator;
   protected _modalTitleLocator: Locator;
@@ -20,6 +33,7 @@ export class AddLoad extends BasePage {
   protected _listBoxLocator: Locator;
   protected _listBoxOptionLocator: Locator;
   protected _toastLocator: Locator;
+  protected _pendingStatusLocator: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -39,6 +53,8 @@ export class AddLoad extends BasePage {
     this._listBoxLocator = page.getByRole("listbox");
     this._listBoxOptionLocator = page.getByRole("option");
     this._toastLocator = page.locator(".toast-message");
+    this._pendingStatusLocator =
+      this._modalContainer.getByTestId("status-component");
   }
 
   public async openAddNewLoad() {
@@ -113,6 +129,91 @@ export class AddLoad extends BasePage {
   }
 
   public async verifyToastMessage() {
-    await expect(this._toastLocator).toContainText("Load Is Created!");
+    await expect(this._toastLocator).toContainText("load is created!");
+  }
+
+  public async verifyToastIsVisible() {
+    await expect(this._toastLocator).toBeVisible();
+  }
+
+  public async addNewLoad() {
+    await this.openAddNewLoad();
+    await this.toggleToManually();
+    await this.selectLoadType("Import");
+    await this.selectLoadFieldInfo(" Customer");
+    await this.selectLoadFieldInfo("Pick Up Location");
+    await this.selectLoadFieldInfo("Delivery Location");
+    await this.selectLoadFieldInfo("Branch");
+    await this.selectLoadRoute();
+    await this.createLoad();
+    await this.verifyToastIsVisible();
+  }
+
+  public async verifyLoadIsStatus(status = "pending") {
+    await this.waitForModalToOpen();
+    await expect(this._pendingStatusLocator).toHaveText(status);
+  }
+
+  private async waitForPageLoaderToHide() {
+    await this._page.waitForLoadState("networkidle");
+    const pageLoader = this._page.locator(".page-loader");
+    await pageLoader.waitFor({ state: "hidden" });
+  }
+
+  private async toggleLoadTab(tab: LoadModalTabs) {
+    await this._modalContainer.getByRole("tab", { name: tab }).click();
+    await this.waitForPageLoaderToHide();
+
+    const response = new Response();
+    const responseStatus = response.status;
+
+    expect(responseStatus).toBe(200);
+    expect(responseStatus).not.toBe(100);
+    expect(responseStatus).not.toBe(300);
+    expect(responseStatus).not.toBe(400);
+    expect(responseStatus).not.toBe(401);
+    expect(responseStatus).not.toBe(403);
+    expect(responseStatus).not.toBe(404);
+    expect(responseStatus).not.toBe(500);
+  }
+
+  public async gotoLoadInfo() {
+    await this.toggleLoadTab("Load Info");
+  }
+
+  public async gotoBilling() {
+    await this.toggleLoadTab("Billing");
+  }
+
+  public async gotoDocuments() {
+    await this.toggleLoadTab("Documents");
+  }
+
+  public async gotoPayment() {
+    await this.toggleLoadTab("Payment");
+  }
+
+  public async gotoRouting() {
+    await this.toggleLoadTab("Routing");
+  }
+
+  public async gotoPayableAndExpenses() {
+    await this.toggleLoadTab("Payable & Expenses");
+  }
+
+  public async gotoTracking() {
+    await this.toggleLoadTab("Tracking");
+  }
+
+  public async gotoMessaging() {
+    await this.toggleLoadTab("Messaging");
+  }
+
+  public async gotoAudit() {
+    await this.toggleLoadTab("Audit");
+  }
+
+  public async gotoNotes() {
+    await this.toggleLoadTab("Notes");
   }
 }
