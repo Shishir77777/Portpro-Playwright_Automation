@@ -250,16 +250,21 @@ export class AddLoad extends BasePage {
     return button;
   }
 
+  private dialogWithHeader() {
+    const header = this._page.getByRole("heading", {
+      name: "Duplicate This Load",
+    });
+    return header;
+  }
+
   public async duplicateLoad() {
-    const modal = this._modalContainer;
     const duplicateButton = await this.getButtonWithIcon("cloneicon");
     await duplicateButton.click();
 
-    const confirmButton = modal.getByRole("button", { name: "Confirm" });
+    const confirmButton = this._page.getByRole("button", { name: "Confirm" });
     await confirmButton.click();
 
-    await this.verifyToastIsVisible();
-    await this.verifyToastMessage("added!");
+    await this.verifyToastMessage("Added!");
   }
 
   public async deleteLoad() {
@@ -270,6 +275,6 @@ export class AddLoad extends BasePage {
     await confirmButton.click();
 
     // await this.verifyToastIsVisible();
-    await this.verifyToastMessage("removed.");
+    await this.verifyToastMessage("Removed.");
   }
 }
