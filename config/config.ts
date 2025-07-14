@@ -1,5 +1,5 @@
 const BASE_URL_PROD = "https://app.pre-prod.portpro.io";
-const BASE_URL_DISPATCHER = "https://app.portpro.io/tms/Dispatcher";
+const BASE_URL_DISPATCHER = "https://app.portpro.io";
 const BASE_URL_EU = "https://eu.portpro.io";
 const BASE_URL_UNIVERSAL = "https://universal.portpro.io";
 const BASE_URL_MEDLOG = "https://medlog.portpro.io";
