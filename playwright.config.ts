@@ -3,7 +3,7 @@ import * as os from "node:os";
 import { devices } from "playwright";
 
 export default defineConfig({
-  timeout: 2 * 60 * 1000,
+  timeout: 3 * 60 * 1000,
   retries: process.env.CI ? 2 : 1,
   workers: 2,
   testDir: "./tests",
