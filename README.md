@@ -22,6 +22,10 @@
 
 **npm run test:universal**
 
+### Run on medlog
+
+**npm run test:medlog**
+
 ## Generate allure reporting
 
 **npm run test:report**

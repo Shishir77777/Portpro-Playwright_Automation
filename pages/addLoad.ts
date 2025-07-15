@@ -256,7 +256,7 @@ export class AddLoad extends BasePage {
 
   private async getLoadCell() {
     let cellNumber = 6;
-    if (this.isEu()) cellNumber = 1;
+    if (this.isEu() || this.isMedlog()) cellNumber = 1;
     if (this.isUniversal()) cellNumber = 4;
 
     const row = await this.getListingRow();
