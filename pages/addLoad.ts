@@ -225,7 +225,10 @@ export class AddLoad extends BasePage {
 
   public async gotoPayableAndExpenses() {
     let tab: string;
-    tab = this.isEu() ? "Driver Pay & Expenses" : "Payable & Expenses";
+    tab =
+      this.isEu() || this.isUniversal()
+        ? "Driver Pay & Expenses"
+        : "Payable & Expenses";
     await this.toggleLoadTab(tab as LoadModalTabs | LoadModalTabsEu);
   }
 
@@ -254,6 +257,7 @@ export class AddLoad extends BasePage {
   private async getLoadCell() {
     let cellNumber = 6;
     if (this.isEu()) cellNumber = 1;
+    if (this.isUniversal()) cellNumber = 4;
 
     const row = await this.getListingRow();
     const cell = row

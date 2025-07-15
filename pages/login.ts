@@ -43,8 +43,6 @@ export class LoginHelper extends BasePage {
     await this._signInButtonLocator.click();
     await this._page.waitForLoadState("networkidle");
     await expect(this._spinnerLocator).not.toBeVisible();
-
-    await this._page.waitForURL(LISTING_ROUTES.TMS_DISPATCHER);
   }
 
   public async skipOnboarding() {
@@ -53,5 +51,6 @@ export class LoginHelper extends BasePage {
     if (isButtonVisible) {
       await button.click();
     }
+    await this._page.waitForURL(LISTING_ROUTES.TMS_DISPATCHER);
   }
 }
