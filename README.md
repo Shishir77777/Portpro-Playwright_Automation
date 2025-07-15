@@ -18,6 +18,10 @@
 
 **npm run test:eu**
 
+### Run on universal
+
+**npm run test:universal**
+
 ## Generate allure reporting
 
 **npm run test:report**
