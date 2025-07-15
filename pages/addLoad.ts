@@ -20,6 +20,18 @@ type LoadModalTabs =
   | "Audit"
   | "Notes";
 
+type LoadModalTabsEu =
+  | "Load Info"
+  | "Billing"
+  | "Documents"
+  | "Payment"
+  | "Routing"
+  | "Driver Pay & Expenses"
+  | "Tracking"
+  | "Messaging"
+  | "Audit"
+  | "Notes";
+
 export class AddLoad extends BasePage {
   protected _addLoadButtonLocator: Locator;
   protected _modalTitleLocator: Locator;
@@ -96,7 +108,16 @@ export class AddLoad extends BasePage {
     }
   }
 
+  private isAutoSelect() {
+    let isAuto =
+      (this.isEu() || this.isUniversal() || this.isMedlog()) ?? false;
+    return isAuto;
+  }
+
   public async selectLoadFieldInfo(field: LoadSelectFields) {
+    const isAuto = this.isAutoSelect();
+
+    if (isAuto && field === "Branch") return;
     await this._modalContainer
       .locator(`//label[text()='${field}']//following-sibling::div`)
       .click();
@@ -109,10 +130,13 @@ export class AddLoad extends BasePage {
   }
 
   private async selectListBoxOption(field: LoadSelectFields) {
+    const isAuto = this.isAutoSelect();
+
     let option = "EVANS KEARNY  | 78 John Miller Way, Kearny, NJ 07032, US";
     if (field === "Branch") option = "MTL";
 
-    await this._listBoxOptionLocator.getByText(option).click();
+    if (isAuto) await this._listBoxOptionLocator.nth(1).click();
+    else await this._listBoxOptionLocator.getByText(option).click();
   }
 
   public async selectLoadRoute() {
@@ -158,11 +182,11 @@ export class AddLoad extends BasePage {
 
   private async waitForPageLoaderToHide() {
     await this._page.waitForLoadState("networkidle");
-    const pageLoader = this._page.locator(".page-loader");
-    await pageLoader.waitFor({ state: "hidden" });
+    const pageLoader = this._modalContainer.locator(".page-loader");
+    await pageLoader.waitFor({ state: "hidden", timeout: 2 * 60 * 1000 });
   }
 
-  private async toggleLoadTab(tab: LoadModalTabs) {
+  private async toggleLoadTab(tab: LoadModalTabs | LoadModalTabsEu) {
     await this._modalContainer.getByRole("tab", { name: tab }).click();
     await this.waitForPageLoaderToHide();
 
@@ -200,7 +224,9 @@ export class AddLoad extends BasePage {
   }
 
   public async gotoPayableAndExpenses() {
-    await this.toggleLoadTab("Payable & Expenses");
+    let tab: string;
+    tab = this.isEu() ? "Driver Pay & Expenses" : "Payable & Expenses";
+    await this.toggleLoadTab(tab as LoadModalTabs | LoadModalTabsEu);
   }
 
   public async gotoTracking() {
@@ -226,10 +252,13 @@ export class AddLoad extends BasePage {
   }
 
   private async getLoadCell() {
+    let cellNumber = 6;
+    if (this.isEu()) cellNumber = 1;
+
     const row = await this.getListingRow();
     const cell = row
       .locator("div[role='gridcell']")
-      .nth(6)
+      .nth(cellNumber)
       .locator("span.cell-content span.text-primary");
     await expect(cell).toBeVisible();
     return cell;
@@ -248,13 +277,6 @@ export class AddLoad extends BasePage {
     const button = modal.locator(`//button[@data-for='${icon}']`);
     await expect(button).toBeVisible();
     return button;
-  }
-
-  private dialogWithHeader() {
-    const header = this._page.getByRole("heading", {
-      name: "Duplicate This Load",
-    });
-    return header;
   }
 
   public async duplicateLoad() {
